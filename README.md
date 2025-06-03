@@ -5,9 +5,11 @@
 Windows Desktop Interface to administrate Battlefield 1 Servers.
 Made using WPF.
 
+![Pic](pic.png)
+![Pic](pic2.png)
+
 ## AdminToolVG (2023):
 
 Lightweight and performant Command Line Interface to administrate Battlefield 1 Servers.
 
-![Pic](pic.png)
-![Pic](pic2.png)
+
