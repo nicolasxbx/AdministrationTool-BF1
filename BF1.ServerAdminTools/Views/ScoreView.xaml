@@ -1,0 +1,613 @@
+﻿<UserControl
+    x:Class="BF1.ServerAdminTools.Views.ScoreView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:attached="clr-namespace:BF1.ServerAdminTools.Assets.Styles.Attached"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="View_Score"
+    d:DesignHeight="900"
+    d:DesignWidth="1600"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ContextMenu x:Key="ContextMenu_Main">
+            <MenuItem Header="Admin Action">
+                <MenuItem
+                    Name="MenuItem_Admin_KickPlayer_Custom"
+                    Click="MenuItem_Admin_KickPlayer_Custom_Click"
+                    Header="Kick Player, Custom Reason" />
+                <Separator />
+                <MenuItem
+                    Name="MenuItem_Admin_KickPlayer_OffensiveBehavior"
+                    Click="MenuItem_Admin_KickPlayer_OffensiveBehavior_Click"
+                    Header="Kick Player, Offensive Behaviour" />
+                <MenuItem
+                    Name="MenuItem_Admin_KickPlayer_Latency"
+                    Click="MenuItem_Admin_KickPlayer_Latency_Click"
+                    Header="Kick Player, Ping" />
+                <MenuItem
+                    Name="MenuItem_Admin_KickPlayer_RuleViolation"
+                    Click="MenuItem_Admin_KickPlayer_RuleViolation_Click"
+                    Header="Kick Player, Rule Violation" />
+                <MenuItem
+                    Name="MenuItem_Admin_KickPlayer_General"
+                    Click="MenuItem_Admin_KickPlayer_General_Click"
+                    Header="Kick Player, Other" />
+                <Separator />
+                <MenuItem
+                    Name="MenuItem_Admin_ChangePlayerTeam"
+                    Click="MenuItem_Admin_ChangePlayerTeam_Click"
+                    Header="Change Team of Player" />
+            </MenuItem>
+            <Separator />
+            <MenuItem
+                Name="MenuItem_CopyPlayerName"
+                Click="MenuItem_CopyPlayerName_Click"
+                Header="Copy ID" />
+            <MenuItem
+                Name="MenuItem_CopyPlayerName_PID"
+                Click="MenuItem_CopyPlayerName_PID_Click"
+                Header="Copy PID" />
+            <Separator />
+            <MenuItem
+                Name="MenuItem_QueryPlayerRecord"
+                Click="MenuItem_QueryPlayerRecord_Click"
+                Header="Query Player Data" />
+            <Separator />
+            <MenuItem
+                Name="MenuItem_QueryPlayerRecordWeb_BT"
+                Click="MenuItem_QueryPlayerRecordWeb_BT_Click"
+                Header="Query via Battlefieldtracker" />
+            <MenuItem
+                Name="MenuItem_QueryPlayerRecordWeb_GT"
+                Click="MenuItem_QueryPlayerRecordWeb_GT_Click"
+                Header="Query via GameTools" />
+            <Separator />
+            <MenuItem Header="Other">
+                <MenuItem
+                    Name="MenuItem_ClearScoreSort"
+                    Click="MenuItem_ClearScoreSort_Click"
+                    Header="Clean up Scoreboard Sorting" />
+                <Separator />
+                <MenuItem
+                    Name="MenuItem_ShowWeaponNameZHCN"
+                    Click="MenuItem_ShowWeaponNameZHCN_Click"
+                    Header="Display abstracted Weapon Names"
+                    IsCheckable="True"
+                    IsChecked="True" />
+            </MenuItem>
+        </ContextMenu>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!--  ################################  -->
+        <Border
+            Grid.Row="0"
+            Margin="5,0,5,3"
+            BorderBrush="Gray"
+            BorderThickness="0,0,0,0.6">
+            <Grid>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="5"
+                            VerticalAlignment="Center"
+                            FontFamily="等线"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="Orange"
+                            Text="{Binding ServerInfoModel.ServerName, FallbackValue='(Nexus Probably first again'}" />
+                        <emoji:TextBlock
+                            Margin="5"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Text="🔥" />
+                        <TextBlock
+                            Margin="5"
+                            VerticalAlignment="Center"
+                            FontFamily="等线"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="Orange">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} - {1}">
+                                    <Binding Path="ServerInfoModel.ServerGameMode" />
+                                    <Binding Path="ServerInfoModel.ServerMapName" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                    <Grid Margin="0,0,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <!--  ################################  -->
+                        <StackPanel
+                            Grid.Column="0"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="Foreground" Value="{StaticResource Color_BF1_Blue}" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock
+                                Margin="5"
+                                FontFamily="等线"
+                                FontWeight="Bold"
+                                Text="{Binding ServerInfoModel.Team1Flag, StringFormat='Flagscore : {0:0}'}" />
+                            <TextBlock
+                                FontSize="14"
+                                Foreground="{StaticResource Color_BF1_Blue}"
+                                Style="{StaticResource TextBlockStyle_IconFontNormal}"
+                                Text="&#xe9f5;" />
+                            <TextBlock Margin="10,0,5,0" Text="|" />
+                            <TextBlock
+                                Margin="5"
+                                FontFamily="等线"
+                                FontWeight="Bold"
+                                Text="{Binding ServerInfoModel.Team1Kill, StringFormat='Killscore : {0:0}'}" />
+                            <TextBlock
+                                FontSize="14"
+                                Foreground="{StaticResource Color_BF1_Blue}"
+                                Style="{StaticResource TextBlockStyle_IconFontNormal}"
+                                Text="&#xe629;" />
+                        </StackPanel>
+                        <!--  ################################  -->
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="10,0,10,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                            <!--  队伍1 进度条  -->
+                            <ProgressBar
+                                attached:Icon.Value="{Binding ServerInfoModel.Team1Img}"
+                                attached:Text.Value="{Binding ServerInfoModel.Team1Score}"
+                                Style="{StaticResource ProgressBarStyle_Team1}"
+                                Value="{Binding ServerInfoModel.Team1ScoreWidth, FallbackValue='0'}" />
+                            <!--  时间  -->
+                            <Border
+                                Margin="5,0,5,0"
+                                Background="{StaticResource Color_BF1_Green}"
+                                SnapsToDevicePixels="True">
+                                <TextBlock
+                                    Width="45"
+                                    Margin="5,0,5,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Foreground="White"
+                                    Text="{Binding ServerInfoModel.ServerTime, FallbackValue='23:59'}"
+                                    TextAlignment="Center" />
+                            </Border>
+                            <!--  队伍2 进度条  -->
+                            <ProgressBar
+                                attached:Icon.Value="{Binding ServerInfoModel.Team2Img}"
+                                attached:Text.Value="{Binding ServerInfoModel.Team2Score}"
+                                Style="{StaticResource ProgressBarStyle_Team2}"
+                                Value="{Binding ServerInfoModel.Team2ScoreWidth, FallbackValue='0'}" />
+                        </StackPanel>
+                        <!--  ################################  -->
+                        <StackPanel
+                            Grid.Column="2"
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="Foreground" Value="{StaticResource Color_BF1_Red}" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock
+                                Margin="5"
+                                FontFamily="等线"
+                                FontWeight="Bold"
+                                Text="{Binding ServerInfoModel.Team2Flag, StringFormat='Flagscore : {0:0}'}" />
+                            <TextBlock
+                                FontSize="14"
+                                Foreground="{StaticResource Color_BF1_Red}"
+                                Style="{StaticResource TextBlockStyle_IconFontNormal}"
+                                Text="&#xe9f5;" />
+                            <TextBlock Margin="10,0,5,0" Text="|" />
+                            <TextBlock
+                                Margin="5"
+                                FontFamily="等线"
+                                FontWeight="Bold"
+                                Text="{Binding ServerInfoModel.Team2Kill, StringFormat='Killscore : {0:0}'}" />
+                            <TextBlock
+                                FontSize="14"
+                                Foreground="{StaticResource Color_BF1_Red}"
+                                Style="{StaticResource TextBlockStyle_IconFontNormal}"
+                                Text="&#xe629;" />
+                        </StackPanel>
+
+                    </Grid>
+                </StackPanel>
+                <Image
+                    Height="25"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Source="/Assets/Images/Other/BF1_Logo.png" />
+                <Image
+                    Height="50"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Source="{Binding ServerInfoModel.ServerMapImg, Converter={StaticResource ImageConverter}}" />
+            </Grid>
+        </Border>
+        <!--  ################################  -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!--  ################################  -->
+            <UniformGrid Grid.Row="0" Columns="2">
+                <DockPanel LastChildFill="True">
+                    <StackPanel
+                        Margin="5,5,5,3"
+                        HorizontalAlignment="Center"
+                        DockPanel.Dock="Top"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,5,0"
+                            FontSize="14"
+                            Foreground="{StaticResource Color_BF1_Blue}"
+                            Style="{StaticResource TextBlockStyle_IconFontNormal}"
+                            Text="&#xe62f;" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource Color_BF1_Blue}"
+                            ><Run Language="de-de" Text=""/></TextBlock>
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource Color_BF1_Blue}"
+                            Text="{Binding ServerInfoModel.Team1Info, FallbackValue='...'}" />
+                    </StackPanel>
+                    <!--  ################################  -->
+                    <DataGrid
+                        Cursor="Hand"
+                        Foreground="{StaticResource Color_BF1_Blue}"                        
+                        x:Name="DataGrid_Team1"
+                        Margin="5,5,2.5,5"
+                        ContextMenu="{StaticResource ContextMenu_Main}"
+                        DockPanel.Dock="Bottom"
+                        ItemsSource="{Binding DataGrid_PlayerList_Team1}"
+                        SelectionChanged="DataGrid_Team1_SelectionChanged"
+                        Style="{StaticResource DataGridStyle_Team1}"
+                        ToolTip="Right-Click Popup Menu">
+                        <DataGrid.Columns>                            
+                            <DataGridTextColumn                                
+                                Width="Auto"
+                                Binding="{Binding Index}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                FontWeight="Bold"
+                                Header="#"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Rank}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="LVL"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Clan}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Clan"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Name}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="ID"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding SquadId}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Squad"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Admin}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Admin"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding VIP}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="VIP"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Kill}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="K"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Dead}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="D"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding KD}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="KD"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding KPM}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="KPM"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Score}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Score"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS0}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Primary"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS1}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Secondary"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS2}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Gadget1"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS5}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Gadget2"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS3}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="GM"
+                                IsReadOnly="False" />
+                            <!--<DataGridTextColumn Header="主要武器V" Width="Auto" Binding="{Binding WeaponS4}" ElementStyle="{StaticResource DataGridTextColumnStyle_C1}" IsReadOnly="False"/>-->
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS6}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Nade"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS7}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Melee"
+                                IsReadOnly="False" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+                <!--  ################################  -->
+                <DockPanel>
+                    <StackPanel
+                        Margin="5,5,5,3"
+                        HorizontalAlignment="Center"
+                        DockPanel.Dock="Top"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,5,0"
+                            FontSize="14"
+                            Foreground="{StaticResource Color_BF1_Red}"
+                            Style="{StaticResource TextBlockStyle_IconFontNormal}"
+                            Text="&#xe62f;" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource Color_BF1_Red}"
+                            ><Run Language="de-de" Text=""/></TextBlock>
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource Color_BF1_Red}"
+                            Text="{Binding ServerInfoModel.Team2Info, FallbackValue='...'}" />
+                    </StackPanel>
+                    <!--  ################################  -->
+                    <DataGrid
+                        Cursor="Hand"
+                        Foreground="{StaticResource Color_BF1_Red}"    
+                        x:Name="DataGrid_Team2"
+                        Margin="2.5,5,5,5"
+                        ContextMenu="{StaticResource ContextMenu_Main}"
+                        DockPanel.Dock="Bottom"
+                        ItemsSource="{Binding DataGrid_PlayerList_Team2}"
+                        SelectionChanged="DataGrid_Team2_SelectionChanged"
+                        Style="{StaticResource DataGridStyle_Team2}"
+                        ToolTip="Right-Click Popup Menu">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Index}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                FontWeight="Bold"
+                                Header="#"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Rank}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="LVL"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Clan}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Clan"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Name}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="ID"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding SquadId}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Squad"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Admin}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Admin"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding VIP}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="VIP"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Kill}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="K"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Dead}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="D"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding KD}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="KD"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding KPM}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="KPM"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Score}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C2}"
+                                Header="Score"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS0}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Primary"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS1}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Secondary"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS2}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Gadget1"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS5}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Gadget2"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS3}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="GM"
+                                IsReadOnly="False" />
+                            <!--<DataGridTextColumn Header="主要武器V" Width="Auto" Binding="{Binding WeaponS4}" ElementStyle="{StaticResource DataGridTextColumnStyle_C1}" IsReadOnly="False"/>-->
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS6}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Nade"
+                                IsReadOnly="False" />
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding WeaponS7}"
+                                ElementStyle="{StaticResource DataGridTextColumnStyle_C1}"
+                                Header="Melee"
+                                IsReadOnly="False" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </UniformGrid>
+        </Grid>
+        <!--  ################################  -->
+        <UniformGrid Grid.Row="2" Columns="2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="5,0,5,0"
+                    VerticalAlignment="Center"
+                    FontWeight="Bold"
+                    Text="[Player Himself]" />
+                <TextBlock Margin="5" Text="{Binding PlayerOtherModel.MySelfName, FallbackValue='ID : '}" />
+                <TextBlock
+                    Margin="5,0,5,0"
+                    VerticalAlignment="Center"
+                    Text="|" />
+                <TextBlock Margin="5" Text="{Binding PlayerOtherModel.MySelfTeamID, FallbackValue='TeamID : '}" />
+                <TextBlock
+                    Margin="5,0,5,0"
+                    VerticalAlignment="Center"
+                    Text="|" />
+                <TextBlock
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Text="{Binding PlayerOtherModel.ServerPlayerCountInfo, FallbackValue='Servernumber : 0'}" />
+            </StackPanel>
+            <!--  ################################  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="5,0,5,0"
+                    VerticalAlignment="Center"
+                    FontWeight="Bold"
+                    Text="[Currently Selected]" />
+                <TextBlock
+                    Name="TextBlock_DataGridSelectionContent"
+                    Margin="5,0,5,0"
+                    VerticalAlignment="Center"
+                    Text="Player ID : NULL | Weapon : NULL" />
+            </StackPanel>
+        </UniformGrid>
+    </Grid>
+
+</UserControl>

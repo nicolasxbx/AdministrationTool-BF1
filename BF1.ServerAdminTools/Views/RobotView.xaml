@@ -1,0 +1,229 @@
+﻿<UserControl
+    x:Class="BF1.ServerAdminTools.Views.RobotView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:attached="clr-namespace:BF1.ServerAdminTools.Assets.Styles.Attached"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BF1.ServerAdminTools.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="View_Robot"
+    d:DesignHeight="900"
+    d:DesignWidth="1600"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="RichTextBoxStyle_Page" TargetType="{x:Type RichTextBox}">
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="IsDocumentEnabled" Value="True" />
+            <Setter Property="Cursor" Value="Arrow" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        </Style>
+
+        <Style x:Key="ParagraphStyle_Title" TargetType="{x:Type Paragraph}">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="LineHeight" Value="10" />
+        </Style>
+
+        <Style x:Key="ParagraphStyle_Content" TargetType="{x:Type Paragraph}">
+            <Setter Property="LineHeight" Value="10" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="0.5*" />
+        </Grid.ColumnDefinitions>
+        <!--  ################################  -->
+        <TextBox
+            x:Name="TextBox_ConsoleLog"
+            Margin="5,5,0,5"
+            Padding="5"
+            IsReadOnly="True"
+            TextWrapping="Wrap" />
+        <!--  ################################  -->
+        <DockPanel Grid.Column="1" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Bottom">
+                <TextBlock Style="{StaticResource TextBlockStyle_Hint}">
+                    Tip: Start the QQ robot service first, and then start the Websocket service after the QQ robot is loaded.
+                </TextBlock>
+                <TextBlock Style="{StaticResource TextBlockStyle_Hint}">
+                    Tip: If you modify the above permissions, you need to restart the Websocket service to take effect
+                </TextBlock>
+                <Label
+                    attached:Icon.Value="☕"
+                    Content="function switch"
+                    Style="{StaticResource LabelStyle_Title}" />
+                <Button
+                    x:Name="Button_RunGoCqHttpServer"
+                    Click="Button_RunGoCqHttpServer_Click"
+                    Content="Start QQ Robot "
+                    Style="{StaticResource ButtonStyle_Web}" />
+                <UniformGrid Columns="2">
+                    <Button
+                        x:Name="Button_RunWebsocketServer"
+                        Click="Button_RunWebsocketServer_Click"
+                        Content="Run WebSocket"
+                        Style="{StaticResource ButtonStyle_Web}" />
+                    <Button
+                        x:Name="Button_StopWebsocketServer"
+                        Click="Button_StopWebsocketServer_Click"
+                        Content="Stop WebSocket"
+                        Style="{StaticResource ButtonStyle_Web}" />
+                </UniformGrid>
+
+            </StackPanel>
+
+            <TabControl
+                Margin="5"
+                DockPanel.Dock="Top"
+                Style="{StaticResource TabControlStyle_Main}">
+                <TabControl.Resources>
+                    <Style BasedOn="{StaticResource TabItemStyle_Main}" TargetType="{x:Type TabItem}" />
+                </TabControl.Resources>
+                <!--  ################################  -->
+                <TabItem attached:Icon.Value="🍇" Header="permission">
+                    <StackPanel>
+                        <Label
+                            attached:Icon.Value="☕"
+                            Content="ROBOT"
+                            Style="{StaticResource LabelStyle_Title}" />
+                        <UniformGrid Columns="2">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock
+                                    Margin="5"
+                                    DockPanel.Dock="Top"
+                                    Text="List of authorized QQ group members"
+                                    TextWrapping="Wrap" />
+                                <ListBox
+                                    x:Name="ListBox_QQGroupMemberIDs"
+                                    Height="250"
+                                    Margin="5,5,0,5"
+                                    DockPanel.Dock="Bottom"
+                                    Style="{StaticResource ListBoxStyle_Normal}" />
+                            </DockPanel>
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="5"
+                                    Text="Authorized QQ group account"
+                                    TextWrapping="Wrap" />
+                                <TextBox
+                                    x:Name="TextBox_QQGroupID"
+                                    Margin="5"
+                                    Padding="5"
+                                    InputLanguageManager.InputLanguage="en-US" />
+                                <TextBlock
+                                    Margin="5"
+                                    Text="Authorized QQ group member QQ number"
+                                    TextWrapping="Wrap" />
+                                <TextBox
+                                    x:Name="TextBox_AddQQGroupMemberID"
+                                    Margin="5"
+                                    Padding="5"
+                                    DockPanel.Dock="Left"
+                                    InputLanguageManager.InputLanguage="en-US" />
+                                <WrapPanel>
+                                    <Button
+                                        x:Name="Button_AddQQGMID"
+                                        Click="Button_AddQQGMID_Click"
+                                        Content="Add"
+                                        Style="{StaticResource ButtonStyle_Normal}" />
+                                    <Button
+                                        x:Name="Button_RemoveQQGMID"
+                                        Click="Button_RemoveQQGMID_Click"
+                                        Content="Remove"
+                                        Style="{StaticResource ButtonStyle_Normal}" />
+                                    <Button
+                                        x:Name="Button_ClearQQGMID"
+                                        Click="Button_ClearQQGMID_Click"
+                                        Content="Clear"
+                                        Style="{StaticResource ButtonStyle_Normal}" />
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <CheckBox
+                                        x:Name="CheckBox_IgnoreQQGroupLimit"
+                                        Margin="5"
+                                        Content="Ignore Limit" />
+                                    <CheckBox
+                                        x:Name="CheckBox_IgnoreQQGroupMemberLimit"
+                                        Margin="5"
+                                        Content="Ignore Member Limit" />
+                                </WrapPanel>
+                                <Button
+                                    x:Name="Button_SaveRobotConfig"
+                                    Click="Button_SaveRobotConfig_Click"
+                                    Content="Save"
+                                    Style="{StaticResource ButtonStyle_Normal}" />
+                            </StackPanel>
+                        </UniformGrid>
+                        <Label
+                            attached:Icon.Value="☕"
+                            Content="QQ Robot Function"
+                            Style="{StaticResource LabelStyle_Title}" />
+                        <WrapPanel>
+                            <CheckBox
+                                x:Name="CheckBox_IsSendChangeTeam"
+                                Margin="5"
+                                Content="Side Change Notification" />
+                        </WrapPanel>
+                    </StackPanel>
+                </TabItem>
+                <!--  ################################  -->
+                <TabItem attached:Icon.Value="🍍" Header="advanced">
+                    <StackPanel>
+                        <WrapPanel>
+                            <Button
+                                x:Name="Button_ChangeGoCqHttpQQID"
+                                Click="Button_ChangeGoCqHttpQQID_Click"
+                                Content="Change QQ robot account"
+                                Style="{StaticResource ButtonStyle_Web}" />
+                            <Button
+                                x:Name="Button_ClearImageCache"
+                                Click="Button_ClearImageCache_Click"
+                                Content="clear image cache"
+                                Style="{StaticResource ButtonStyle_Web}" />
+                            <Button
+                                x:Name="Button_OpenGoCqHttpPath"
+                                Click="Button_OpenGoCqHttpPath_Click"
+                                Content="Open configuration folder"
+                                Style="{StaticResource ButtonStyle_Web}" />
+                        </WrapPanel>
+                    </StackPanel>
+                </TabItem>
+                <!--  ################################  -->
+                <TabItem attached:Icon.Value="🍊" Header="illustrate">
+                    <RichTextBox
+                        Margin="5"
+                        DockPanel.Dock="Top"
+                        Style="{StaticResource RichTextBoxStyle_Page}">
+                        <FlowDocument>
+                            <Paragraph Style="{StaticResource ParagraphStyle_Title}">
+                                Available Instructions
+                            </Paragraph>
+                            <Paragraph Style="{StaticResource ParagraphStyle_Content}">
+                                #Chat xxxx<LineBreak />
+                                #Screenshots<LineBreak />
+                                #ScoreboardScreenshot</Paragraph>
+
+                            <Paragraph Style="{StaticResource ParagraphStyle_Title}">
+                                configuration file
+                            </Paragraph>
+                            <Paragraph>
+                                Screenshot file path：C:\ProgramData\BF1 Server\Robot\data\images<LineBreak />
+                            </Paragraph>
+
+                        </FlowDocument>
+                    </RichTextBox>
+                </TabItem>
+            </TabControl>
+
+        </DockPanel>
+
+    </Grid>
+
+</UserControl>
